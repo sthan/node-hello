@@ -26,7 +26,10 @@ pipeline {
           volumes:
           - name: docker-sock
             hostPath:
-              path: /var/run/docker.sock  
+              path: /var/run/docker.sock
+        securityContext:
+          allowPrivilegeEscalation: true
+          runAsUser: 0
         '''
     }
   }
