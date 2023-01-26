@@ -60,4 +60,5 @@ pipeline {
       archiveArtifacts artifacts: 'build.properties', fingerprint: true
     }  
   }
+  }
 }
