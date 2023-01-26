@@ -55,10 +55,10 @@ pipeline {
         }
       }
     }
+  }
   post {
     always {
       archiveArtifacts artifacts: 'build.properties', fingerprint: true
     }  
-  }
   }
 }
