@@ -34,7 +34,7 @@ pipeline {
     stage('Docker build') {
       steps {
         container('docker') {
-          git branch: "${GIT_REPO_BRANCH}", changelog: false, poll: false, url: "GIT_REPO_URL"
+          //  git branch: "${GIT_REPO_BRANCH}", changelog: false, poll: false, url: "GIT_REPO_URL"
           sh "docker build -t hello-world:${GIT_TAG} ."
         }
       }
