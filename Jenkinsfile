@@ -23,9 +23,21 @@ pipeline {
             command:
             - cat
             tty: true
+            volumeMounts:
+              - name: docker-config
+                mountPath: /kaniko/.docker
             securityContext:
               allowPrivilegeEscalation: true
               runAsUser: 0
+          volumes:
+          - name: docker-config
+            projected:
+              sources:
+              - secret:
+                  name: regcred
+                  items:
+                    - key: .dockerconfigjson
+                      path: config.json
         '''
     }
   }
