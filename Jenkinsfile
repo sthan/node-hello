@@ -1,6 +1,6 @@
 pipeline {
   environment {
-        registry = "cronsprod.azurecr.io"
+        registry = "shubhashish"
         app_name = "helloworld"
         GIT_TAG = sh(returnStdout: true, script: 'git log -n 1 --pretty=format:"%h"').trim()
         GIT_REPO_URL = "https://github.com/shubhasish/node-hello.git"
