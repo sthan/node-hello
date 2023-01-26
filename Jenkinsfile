@@ -5,6 +5,7 @@ pipeline {
         GIT_TAG = sh(returnStdout: true, script: 'git log -n 1 --pretty=format:"%h"').trim()
         GIT_REPO_URL = "https://github.com/shubhasish/node-hello.git"
         GIT_REPO_BRANCH = "development"
+        cache = "false"
     }
     
   agent {
