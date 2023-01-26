@@ -47,12 +47,17 @@ pipeline {
         container(name: 'kaniko', shell: '/busybox/sh') {
           //  git branch: "${GIT_REPO_BRANCH}", changelog: false, poll: false, url: "GIT_REPO_URL"
               sh """
-                    echo ${GIT_TAG}
+                    echo ${GIT_TAG} 
                     #!/busybox/sh
-                    /kaniko/executor --cleanup --verbosity info  -f Dockerfile -c `pwd` --cache=${cache} --destination=${registry}/${app_name}:${GIT_TAG}  
+                    /kaniko/executor --cleanup --verbosity info  -f Dockerfile -c `pwd` --cache=${cache} --destination=${registry}/${app_name}:${GIT_TAG}
+                    echo ${GIT_TAG} > build.properties  
                 """
         }
       }
+    }
+  post {
+    always {
+      archiveArtifacts artifacts: 'build.properties', fingerprint: true
     }  
   }
 }
