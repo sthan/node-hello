@@ -1,6 +1,7 @@
 pipeline {
   environment {
         registry = "cronsprod.azurecr.io"
+        app_name = "helloworld"
         GIT_TAG = sh(returnStdout: true, script: 'git log -n 1 --pretty=format:"%h"').trim()
         GIT_REPO_URL = "https://github.com/shubhasish/node-hello.git"
         GIT_REPO_BRANCH = "development"
@@ -15,30 +16,28 @@ pipeline {
             name: docker
         spec:
           containers:
-          - name: docker
-            image: docker:latest
+          - name: kaniko
+            image: gcr.io/kaniko-project/executor:debug-v1.2.0
+            imagePullPolicy: Always
             command:
             - cat
             tty: true
-            volumeMounts:
-             - mountPath: /var/run/docker.sock
-               name: docker-sock
-          volumes:
-          - name: docker-sock
-            hostPath:
-              path: /var/run/docker.sock
-        securityContext:
-          allowPrivilegeEscalation: true
-          runAsUser: 0
+            securityContext:
+              allowPrivilegeEscalation: true
+              runAsUser: 0
         '''
     }
   }
   stages {
     stage('Docker build') {
       steps {
-        container('docker') {
+        container(name: 'kaniko', shell: '/busybox/sh') {
           //  git branch: "${GIT_REPO_BRANCH}", changelog: false, poll: false, url: "GIT_REPO_URL"
-          sh "docker build -t hello-world:${GIT_TAG} ."
+              sh """
+                    echo ${GIT_TAG}
+                    #!/busybox/sh
+                    /kaniko/executor --cleanup --verbosity info  -f Dockerfile -c `pwd` --cache=${cache} --destination=${registry}/${app-name}:${GIT_TAG}  
+                """
         }
       }
     }  
